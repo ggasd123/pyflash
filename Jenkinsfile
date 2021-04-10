@@ -45,7 +45,7 @@ pipeline {
           gcloud --quiet container clusters get-credentials $GKE_CLUSTER_NAME
           # edit k8s deployment
           kubectl get deploy
-          kubectl set image deployment/pyflask-deploy pyflask-deploy=cloudgenius/pyflask:$GIT_COMMIT
+          kubectl set image deployment/pyflask-deploy pyflask=cloudgenius/pyflask:$GIT_COMMIT
           kubectl annotate deployment.v1.apps/pyflask-deploy kubernetes.io/change-cause=$GIT_COMMIT
           kubectl get deploy
         ''', label: "Deploying the python-app to production kubernetes cluster"
