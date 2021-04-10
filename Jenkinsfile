@@ -19,6 +19,21 @@ pipeline {
         ''', label: "Building docker image for pyflash"
       }
     }
+    
+    
+    
+    stage('Push to container registry') {
+      steps {
+        sh script: '''
+        echo $D_PASS | docker login --username $D_USER --password-stdin
+        docker push  cloudgenius/pyflask:$GIT_COMMIT
+        ''', label: "Pushing images container registry"
+      }
+    }
+    
+    
+    
+   
 
   }
 
