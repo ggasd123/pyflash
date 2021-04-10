@@ -1,5 +1,7 @@
-FROM alpine:3
-RUN apk add --update-cache python3 py3-pip && rm -rf /var/cache/apk/*
+FROM ubuntu:18.04
+
+RUN apt-get update -y && \
+  apt-get install -y python3-pip
 
 WORKDIR /app
 
