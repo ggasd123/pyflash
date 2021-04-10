@@ -30,9 +30,31 @@ pipeline {
         ''', label: "Pushing images container registry"
       }
     }
+
     
     
     
+    stage('Production deploy') {
+      steps {
+        sh script: '''
+          # grant k8s permissions
+          echo $GKE_SERVICE_ACCOUNT | base64 --decode > /tmp/gke_key.json
+          gcloud auth activate-service-account --key-file /tmp/gke_key.json
+          gcloud config set project $GKE_PROJECT_ID
+          gcloud config set compute/zone $GKE_COMPUTE_ZONE
+          gcloud --quiet container clusters get-credentials $GKE_CLUSTER_NAME
+          # edit k8s deployment
+          kubectl get deploy
+          kubectl set image deployment/pyflask-deploy pyflask-deploy=cloudgenius/pyflask:$GIT_COMMIT
+          kubectl annotate deployment.v1.apps/pyflask-deploy kubernetes.io/change-cause=$GIT_COMMIT
+          kubectl get deploy
+        ''', label: "Deploying the python-app to production kubernetes cluster"
+      }
+    }
+    
+    
+    
+   
    
 
   }
